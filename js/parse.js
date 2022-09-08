@@ -114,6 +114,7 @@ export class MidiData {
                         newLineIndex = i;
                     }
                 }
+                // Creates a new line with the same color to add the point to
                 if (newLineIndex == -1) {
                     let newLine = new Line();
                     let oldLine = scope.lines[lineIndex];
@@ -123,17 +124,6 @@ export class MidiData {
                     scope.lines.push(newLine);
                 }
                 prevPoint = getPrevPoint();
-                // while (lineIndex + newLineIndex < scope.lines.length && prevPoint != null && note.time < prevPoint.time) {
-                //     newLineIndex++;
-                //     if (lineIndex + newLineIndex == scope.lines.length) {
-                //         let newLine = new Line();
-                //         let oldLine = scope.lines[lineIndex + newLineIndex - 1];
-                //         newLine.hue = oldLine.hue;
-                //         newLine.hsl = oldLine.hsl;
-                //         scope.lines.push(newLine);
-                //     }
-                //     prevPoint = getPrevPoint();
-                // }
 
                 let line = scope.lines[lineIndex + newLineIndex];
 
@@ -152,8 +142,6 @@ export class MidiData {
 
         scope.minNote = minNote;
         scope.maxNote = maxNote;
-
-        console.log(scope.cleanMidi.tracks.length, scope.lines.length);
     }
 }
 

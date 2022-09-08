@@ -1,24 +1,23 @@
-import { play } from "./draw.js"
+import { play } from "./render.js"
 
 // Get midi file from user
 document.querySelector("#play-file").addEventListener("click", async function () {
+    // Starts the Tone AudioContext, which must be done as the result of direct user input
     await Tone.start();
 
-    // no file selected to read
+    // User has not selected a file
     if (document.querySelector("#file").value == "") {
-        console.log("No file selected");
+        alert("No file selected. Please press the \"Choose File\" button and choose a file that has a .mid or .midi extension.");
         return;
     }
 
+    // Reads the binary data in the file given by the user and passes it to out main play function
     let file = document.querySelector("#file").files[0];
-
     let reader = new FileReader();
     reader.onload = function (e) {
-        // binary data
         play(e.target.result);
     };
     reader.onerror = function (e) {
-        // error occurred
         console.log("Error : " + e.type);
     };
     reader.readAsArrayBuffer(file);

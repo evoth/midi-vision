@@ -1,30 +1,5 @@
-class Tracks {
-    constructor() {
-        this.tracks = [];
-    }
-
-    addTrack(track) {
-        this.tracks.push(track);
-    }
-
-    start() {
-        // for (let track of this.tracks) {
-        //     track.part.start(0);
-        // }
-        Tone.Transport.start(0);
-    }
-}
-
-class Track {
-    constructor(synth, part) {
-        this.synth = synth;
-        this.part = part;
-    }
-}
-
 // Schedule all notes to be played
 export function playNotes(midi) {
-    let tracks = new Tracks();
 
     midi.tracks.forEach(track => {
         // Creates two synth with two sawtooth oscillators and filter envelopes to create "wah" effect
@@ -53,12 +28,12 @@ export function playNotes(midi) {
                     type: "sawtooth"
                 },
                 envelope: {
-                    // Should be duration of note (0.5 long)
                     attack: 0.1,
                     sustain: 1,
                     release: 1,
                 },
                 filterEnvelope: {
+                    // We change this dynamically to better match the length of the note
                     attack: 1,
                     sustain: 1,
                     release: 2,
@@ -69,8 +44,11 @@ export function playNotes(midi) {
             vibratoAmount: 0
         }).toDestination();
 
+        // Create a Part which runs the callback when each note is to be played. This way we can schedule them all together
         const part = new Tone.Part(((time, note) => {
+            // Fit the filter envelope of voice1 to fit the duration of the note or 1 second, whichever is shorter
             synth.voice1.filterEnvelope.attack = Math.min(note.duration, 1);
+            // Triggers the note
             synth.triggerAttackRelease(
                 note.name,
                 note.duration,
@@ -79,10 +57,8 @@ export function playNotes(midi) {
             );
         }), track.notes).start(0);
 
-        tracks.addTrack(new Track(synth, part));
-
         //synth.dispose();
     });
 
-    tracks.start();
+    Tone.Transport.start(0);
 }
