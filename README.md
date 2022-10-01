@@ -1,5 +1,5 @@
 # Midi Vision
-Visualize any MIDI file as a chorus of colorful lines!
+A browser-based tool to intuitively visualize the shape of a melody found in any MIDI file as a chorus of colorful lines!
 
 ## Website
 See it in action at https://midi.ethanvoth.com!
