@@ -35,7 +35,7 @@ class Line {
 
 // Holds all of the information needed to draw and play a midi file
 export class MidiData {
-    constructor(midiBin) {
+    constructor(midiBin, offset) {
         this.midi = new Midi(midiBin);
         this.cleanMidi = new Midi();
         this.cleanMidi.addTrack();
@@ -57,6 +57,8 @@ export class MidiData {
             // Iterates through each note in the track
             for (let note of track.notes) {
                 let trackIndex = 0;
+                // Offset time of note so that there is a delay before we start playing
+                note.time += offset;
 
                 // Gets the most recent note of this track
                 function getPrevNote() {
@@ -67,9 +69,13 @@ export class MidiData {
                     return notes[notes.length - 1];
                 }
 
-                // Finds (or creates) the first track in which the new note can be placed without overlapping a previous note
+                // Finds (or creates) the first track in which the new note can be placed without overlapping a previous
+                // note or being adjacent to the same note
                 let prevNote = getPrevNote();
-                while (trackIndex < scope.cleanMidi.tracks.length && prevNote != null && note.time <= prevNote.time + prevNote.duration) {
+                while (trackIndex < scope.cleanMidi.tracks.length && prevNote != null
+                    && (note.time <= prevNote.time + prevNote.duration
+                        || note.time - (prevNote.time + prevNote.duration) < 0.1
+                        && note.midi == prevNote.midi)) {
                     trackIndex++;
                     if (trackIndex == scope.cleanMidi.tracks.length) {
                         scope.cleanMidi.addTrack();

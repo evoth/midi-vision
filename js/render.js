@@ -38,7 +38,7 @@ function drawWorkerWrapper(drawWorker, bufferW, bufferH, time, startX, endX, min
 
 // Play and display midi file from binary data
 export function play(midiFile) {
-    let midiData = new MidiData(midiFile);
+    let midiData = new MidiData(midiFile, 0.2);
     // Ugly, but gets the job done
     const midiDataTransferrable = JSON.parse(JSON.stringify(midiData));
     // Sends the midi data to the workers so that they can have it on hand when needed
